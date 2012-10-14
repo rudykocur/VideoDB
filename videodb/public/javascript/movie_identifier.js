@@ -64,21 +64,36 @@ var IdentificationSession = function(container, mask, url) {
 	this.container.grab(this.list);
 }
 
-IdentificationSession.prototype.cancelSession = function(e) {
+IdentificationSession.prototype.cancelSession = function(e, callback) {
 	if(e) {
 		e.stop();
 	}
 	
-	this.container.destroy();
-	this.mask.hide();
+	var _fun = function() {
+		this.container.destroy();
+		this.mask.hide();
+		
+		if(callback) {
+			callback();
+		}
+	}.bind(this);
+	
+	if(this.queueId) {
+		new Request({
+			url: '/cancelIdentifyQueue/'+this.queueId+'/',
+			onSuccess: function() {
+				_fun();
+			}
+		}).send();
+	}
+	else {
+		_fun();
+	}
+	
+	
 	
 	this.cancelIdentification();
 	
-	if(this.queueId) {
-		new Request.JSON({
-			url: '/cancelIdentifyQueue/'+this.queueId+'/'
-		}).send();
-	}
 }
 
 IdentificationSession.prototype.cancelIdentification = function() {
@@ -105,6 +120,7 @@ IdentificationSession.prototype.startIdentify = function(url) {
 		url: url || this.originalUrl,
 		
 		onSuccess: function(data) {
+			this.identifyData = data;
 			this.processQueue(data.queueId, data.resultCount, data.name);
 		}.bind(this)
 	}).send();
@@ -132,8 +148,18 @@ IdentificationSession.prototype._renderMovie = function(movie) {
 		li.addClass('break');
 	}
 	
+	var img = new Element('img', {src: movie.cover || '/images/preview_unavailable.png'});
+	
+	img.addEvent('click', function() {
+		var _url = '/associate?imdbId='+movie.id+'&movieId='+this.identifyData.movieId;
+		this.cancelSession(false, function() {
+			window.location = _url;
+		})
+		//window.location = '/associate?imdbId='+movie.id+'&movieId='+this.identifyData.movieId;
+	}.bind(this));
+	
 	li.grab(new Element('span', {'class':'title', text: movie.title + ' ('+movie.year+')'}));
-	li.grab(new Element('img', {src: movie.cover || '/images/preview_unavailable.png'}));
+	li.grab(img);
 	li.grab(new Element('span', {'class': 'genres', text: movie.genres.join(', ')}));
 	
 	this.list.grab(li);

@@ -42,9 +42,17 @@ class RootController(BaseController):
     def index(self):
         """Handle the front-page."""
         
-        allmovies = DBSession.query(entities.Movie).filter(entities.Movie.disabled==False).all()
+        knownCond = entities.Movie.disabled==False, entities.Movie.imdbData!=None
+        knownMovies = DBSession.query(entities.Movie)\
+            .join(entities.ImdbData)\
+            .filter(*knownCond)\
+            .order_by(entities.ImdbData.name)\
+            .all()
         
-        return dict(page='index', movies=allmovies)
+        cond = entities.Movie.disabled==False, entities.Movie.imdbData==None
+        allmovies = DBSession.query(entities.Movie).filter(*cond).all()
+        
+        return dict(page='index', movies=allmovies, known=knownMovies)
     
     @expose('json')
     def identify(self, movieId, customName=None):
@@ -58,6 +66,24 @@ class RootController(BaseController):
         queueId, resultCount = app_globals.findByFilename(identifyName)
         
         return dict(name=identifyName, path=movie.path, queueId=queueId, resultCount=resultCount, movieId=movieId)
+    
+    @expose()
+    def associate(self, movieId, imdbId):
+        
+        movie = DBSession.query(entities.Movie).get(int(movieId))
+        
+        imdbData = DBSession.query(entities.ImdbData).get(imdbId)
+        if imdbData is None:
+            data = imdb_utils.getMovieData(imdbId)
+            
+            imdbData = entities.ImdbData(imdbId=data['id'], name=data['title'], 
+                genres=', '.join(data['genres']), coverUrl=data['cover'], year=data['year'],
+                runtime=data['runtime'])
+            DBSession.add(imdbData)
+        
+        movie.imdbData = imdbData
+        
+        redirect('/')
     
     @expose('json')
     def cancelIdentifyQueue(self, queueId):

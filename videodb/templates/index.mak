@@ -16,6 +16,18 @@
 
 HOWDY ${page} :: <a href="${tg.url('/refresh')}">Odśwież</a>
 
+<ul id="knownmovies">
+% for movie in known:
+	<li>
+		<span class="title">${movie.imdbData.name} (${movie.imdbData.year})</span>
+		<img src="${movie.imdbData.coverUrl or '/images/preview_unavailable.png'}"/>
+		<span class="genres">${movie.imdbData.genres}</span>
+	</li>
+% endfor
+</ul>
+
+<br/><br/><br/>
+
 <ul id="movielist">
 % for movie in movies:
 	<li>

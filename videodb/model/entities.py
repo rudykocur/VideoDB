@@ -31,5 +31,5 @@ class ImdbData(DeclarativeBase):
     genres = Column(Unicode)
     coverUrl = Column(Unicode)
     year = Column(Unicode)
-    
+    runtime = Column(Unicode)
     

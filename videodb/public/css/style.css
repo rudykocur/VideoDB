@@ -27,6 +27,33 @@ html[xmlns] .clearfix {
 	background-color: rgba(0,0,0,0.7);
 }
 
+
+
+#knownmovies img {
+	max-width: 150px;
+	max-height: 150px;
+}
+
+#knownmovies li {
+	display:inline-block;
+	vertical-align: top;
+	width: 200px;
+	text-align: center;
+	padding-top: 15px;
+}
+
+#knownmovies li .title {
+	display: block;
+	font-weight: bold;
+}
+
+#knownmovies li .genres {
+	display: block;
+	font-style: italic;
+}
+
+
+
 #movieIdentification {
 	position: absolute;
 	width: 1100px;
@@ -61,10 +88,6 @@ html[xmlns] .clearfix {
 	width: 200px;
 	text-align: center;
 	padding-top: 15px;
-}
-
-#movieIdentification li.break {
-	clear: both;
 }
 
 #movieIdentification li .title {

@@ -1,4 +1,4 @@
-import re, os
+import re, os, time
 import imdb
 
 def sanitizeFilename(name):
@@ -18,13 +18,27 @@ def sanitizeFilename(name):
         
     return name
 
+def getMovieData(imdbId):
+    i = imdb.IMDb()
+    movie = i.get_movie(imdbId)
+    
+    return {
+        'id': movie.movieID,
+        'title': movie['title'],
+        'genres': movie.get('genres', []),
+        'cover': movie.get('full-size cover url', None),
+        'year': movie.get('year', None),
+        'runtime': ','.join(movie.get('runtime', []))
+    }
+
 def findByFilename(name):
     print 'IMDB - searching for:', name
-    
+    t1 = time.time()
     i = imdb.IMDb()
+    t2 = time.time()
     results = i.search_movie(name)
     
-    print 'Found', len(results), 'results'
+    print 'Found', len(results), 'results', '::', (t2-t1)
     
     yield len(results)
     
@@ -43,6 +57,7 @@ def findByFilename(name):
             'genres': movie.get('genres', []),
             'cover': movie.get('full-size cover url', None),
             'year': movie.get('year', None),
+            'runtime': movie.get('runtime', None)
         }
         
         print 'yielding', data
