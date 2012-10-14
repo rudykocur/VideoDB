@@ -1,0 +1,4 @@
+*.pyc
+/videodb.egg-info
+/data
+devdata.db*
