@@ -4,6 +4,9 @@
 from tg import expose, flash, require, url, lurl, request, redirect, tmpl_context, app_globals
 from tg.i18n import ugettext as _, lazy_ugettext as l_
 from tgext.admin import AdminController
+
+from sqlalchemy.orm import joinedload
+
 from videodb.model import DBSession, metadata
 
 from videodb.model import entities
@@ -47,6 +50,7 @@ class RootController(BaseController):
             .join(entities.ImdbData)\
             .filter(*knownCond)\
             .order_by(entities.ImdbData.name)\
+            .options(joinedload(entities.Movie.imdbData))\
             .all()
         
         cond = entities.Movie.disabled==False, entities.Movie.imdbData==None
@@ -112,24 +116,8 @@ class RootController(BaseController):
         #return dict(removed=True, movieId=movieId)
         redirect('/')
     
-    '''
-    @expose('json')
-    def json(self):
-        return dict(ala="ma kota", answer=42)
-
-    @expose('videodb.templates.about')
-    def about(self):
-        """Handle the 'about' page."""
-        return dict(page='about')
-
-    @expose('videodb.templates.environ')
-    def environ(self):
-        """This method showcases TG's access to the wsgi environment."""
-        return dict(page='environ', environment=request.environ)
-
-    @expose('videodb.templates.data')
-    @expose('json')
-    def data(self, **kw):
-        """This method showcases how you can use the same controller for a data page and a display page"""
-        return dict(page='data', params=kw)
-    '''
+    @expose('videodb.templates.movieCard')
+    def movieCard(self, imdbId):
+        data = imdb_utils.getMovieFullData(imdbId)
+        return dict(data=data)
+    

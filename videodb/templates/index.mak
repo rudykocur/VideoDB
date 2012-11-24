@@ -1,11 +1,12 @@
 <%inherit file="local:templates.master"/>
 
 <%def name="title()">
-  HOŁMPYJDŻ
+  VideoDB
 </%def>
 
 <%def name="resources()">
 <script src="${tg.url('/javascript/movie_identifier.js')}"></script>
+<script src="${tg.url('/javascript/movie_card.js')}"></script>
 
 <script>
 	window.addEvent('domready', function() {
@@ -18,13 +19,26 @@ HOWDY ${page} :: <a href="${tg.url('/refresh')}">Odśwież</a>
 
 <ul id="knownmovies">
 % for movie in known:
-	<li>
+	<li id="imdb-${movie.imdbData.imdbId}">
 		<span class="title">${movie.imdbData.name} (${movie.imdbData.year})</span>
-		<img src="${movie.imdbData.coverUrl or '/images/preview_unavailable.png'}"/>
+		<div class="imgwrap">
+			<img src="${movie.imdbData.coverUrl or '/images/preview_unavailable.png'}"/>
+		</div>
 		<span class="genres">${movie.imdbData.genres}</span>
 	</li>
 % endfor
 </ul>
+
+
+<script>
+window.addEvent('domready', function() {
+
+	MovieCard.initalize();
+% for movie in known:
+	MovieCard.attach('${movie.imdbData.imdbId}');
+% endfor
+});
+</script>
 
 <br/><br/><br/>
 

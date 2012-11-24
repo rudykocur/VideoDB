@@ -16,8 +16,8 @@ var MovieIdentifier = (function() {
 		$(document.body).grab(container);
 		
 		container.position({
-			position: 'centerTop',
-			edge: 'centerTop',
+			position: 'leftTop',
+			edge: 'leftTop',
 			offset: {x: 0, y: 20}
 		});
 		
@@ -159,7 +159,7 @@ IdentificationSession.prototype._renderMovie = function(movie) {
 	}.bind(this));
 	
 	li.grab(new Element('span', {'class':'title', text: movie.title + ' ('+movie.year+')'}));
-	li.grab(img);
+	li.grab(new Element('div', {'class':'imgwrap'}).grab(img));
 	li.grab(new Element('span', {'class': 'genres', text: movie.genres.join(', ')}));
 	
 	this.list.grab(li);

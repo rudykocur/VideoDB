@@ -28,10 +28,24 @@ html[xmlns] .clearfix {
 }
 
 
+strong {
+	font-weight: bold;
+}
 
+
+
+#knownmovies .imgwrap {
+	height: 155px;
+}
 #knownmovies img {
 	max-width: 150px;
 	max-height: 150px;
+	cursor: pointer;
+	border: solid 2px transparent;
+}
+
+#knownmovies img:hover {
+	border: solid 2px red;
 }
 
 #knownmovies li {
@@ -45,6 +59,8 @@ html[xmlns] .clearfix {
 #knownmovies li .title {
 	display: block;
 	font-weight: bold;
+	min-height: 2em;
+	margin-bottom: 2px;
 }
 
 #knownmovies li .genres {
@@ -54,9 +70,25 @@ html[xmlns] .clearfix {
 
 
 
+#movielist {
+	word-wrap: break-word;
+}
+
+#movielist li {
+	margin-bottom: 5px;
+}
+
+
+
+
+
+#movieCard,
 #movieIdentification {
 	position: absolute;
-	width: 1100px;
+	/*width: 1100px;*/
+	min-width: 100px;
+	min-height: 20px;
+	margin: 10px;
 	background: white;
 	z-index: 991;
 	padding: 10px;
@@ -100,9 +132,40 @@ html[xmlns] .clearfix {
 	font-style: italic;
 }
 
+#movieIdentification .imgwrap {
+	height: 155px;
+}
 #movieIdentification li img {
 	max-width: 150px;
 	max-height: 150px;
+	border: solid 2px transparent;
+	cursor: pointer;
+}
+
+#movieIdentification li img:hover {
+	border-color: red;
+}
+
+
+
+
+
+
+
+
+#movieCard .cover {
+	margin-right: 400px;
+}
+
+#movieCard .infoPanel {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	width: 390px;
+}
+
+#movieCard li {
+	padding-bottom: 5px;
 }
 
 
