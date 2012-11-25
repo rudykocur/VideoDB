@@ -14,6 +14,7 @@
 		<li><strong>Rozdzielczość</strong>: ${ffmpeg['frameSizeString']}</li>
 		<li><strong>Języki</strong>: ${', '.join(ffmpeg['audioLang'])}</li>
 		<li><strong>Napisy</strong>: ${', '.join(ffmpeg['subLang']) or 'Brak'}</li>
+		<li><strong>Ścieżka</strong>: <pre>${movie.library.name}:${movie.path}</pre></li>
 	</ul>
 </div>
 

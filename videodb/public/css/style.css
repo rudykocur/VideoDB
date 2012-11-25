@@ -184,6 +184,13 @@ strong {
 	cursor: pointer;
 }
 
+#movieCard li pre {
+	display: inline;
+	font-family: monospace;
+	word-wrap: break-word;
+	white-space: pre-wrap;
+}
+
 
 
 /*

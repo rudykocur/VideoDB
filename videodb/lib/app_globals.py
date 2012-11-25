@@ -124,7 +124,7 @@ class Globals(object):
             
             libraryRoot = library.root.encode('utf-8')
             
-            tmpcounter = 0
+            #tmpcounter = 0
             
             for dirpath, dirnames, filenames in os.walk(libraryRoot):
                 for f in filenames:
@@ -133,15 +133,17 @@ class Globals(object):
                         #print dirpath, "::", f
                         relpath = unicode(os.path.join(dirpath[len(libraryRoot):], f), 'utf_8', 'replace')
                         
-                        if relpath not in knownFiles:
-                            print 'NEW MOVIE:', relpath
+                        if relpath in knownFiles:
+                            continue
+                        
+                        print 'NEW MOVIE:', relpath
                         #else: print relpath
                         
                         #print relpath
                         
-                        tmpcounter += 1
-                        if tmpcounter % 9 == 0:
-                            continue
+                        #tmpcounter += 1
+                        #if tmpcounter % 9 == 0:
+                        #    continue
                         
                         movie = entities.Movie(library=library, path=relpath)
                         newMovies.append(movie)

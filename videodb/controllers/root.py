@@ -100,6 +100,8 @@ class RootController(BaseController):
         
         movie.imdbData = imdbData
         
+        ffmpeg.getMovieInfo(movie.getFullPath())
+        
         redirect('/identifyList')
     
     @expose('json')
@@ -136,5 +138,5 @@ class RootController(BaseController):
         ffmpegData = ffmpeg.getMovieInfo(os.path.join(movie.library.root, movie.path))
         data = imdb_utils.getMovieFullData(movie.imdbData.imdbId)
         
-        return dict(imdb=data, ffmpeg=ffmpegData)
+        return dict(imdb=data, ffmpeg=ffmpegData, movie=movie)
     

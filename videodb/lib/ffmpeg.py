@@ -1,5 +1,5 @@
 import json, os, traceback
-
+import subprocess
 
 out1 = """
 {
@@ -262,7 +262,7 @@ def formatDuration(number):
     #secondsFloat = minutes - int(minutes)
     #seconds = 60*secondsFloat
     
-    return '%s:%s' % (int(hours), int(minutes))
+    return '%d:%02d' % (int(hours), int(minutes))
 
 def processAudioStreams(streams):
     out = []
@@ -274,6 +274,25 @@ def processAudioStreams(streams):
     return out
 
 processSubStreams = processAudioStreams
+
+def queryFFProbe(path):
+    params = [
+        'ffprobe', 
+        '-v', 'quiet',
+        '-print_format', 'json',
+        '-show_format',
+        '-show_streams',
+        path
+    ]
+    
+    #print 'INVOKE', params
+    p = subprocess.Popen(params, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    
+    out, err = p.communicate()
+    
+    return out
+    
+    
 
 def processJson(out):
     data = json.loads(out)
@@ -313,19 +332,16 @@ def getCacheFilename(path):
     
     return os.path.join(root, cacheFile)
 
-def getCachedMovieInfo(path):
+def _getCachedMovieInfo(path):
     f = getCacheFilename(path)
-    
-    #print 'Cache file:', f
     
     if os.path.exists(f):
         with open(f) as fp:
             return json.load(fp)
     
-    return processJson(out3)
     return None
 
-def saveMovieInfo(path, info):
+def _saveMovieInfo(path, info):
     f = getCacheFilename(path)
     
     try:
@@ -335,19 +351,29 @@ def saveMovieInfo(path, info):
         print '!!!!!! Unable to cache movie info:', e
         print traceback.format_exc()
 
+def getCachedMovieInfo(path):
+    out = _getCachedMovieInfo(path)
+    if out is not None:
+        return processJson(out)
+    
+    return None
+
 def getMovieInfo(path, useCache=True):
     #print 'Getting movie info for', path
     
-    if useCache:
-        cacheInfo = getCachedMovieInfo(path)
-        if cacheInfo is not None:
-            return cacheInfo
-    
-    
-    info = processJson(out3)
+    out = None
     
     if useCache:
-        saveMovieInfo(path, info)
+        out = _getCachedMovieInfo(path)
+    
+    if out is None:
+        print 'PROBING through ffprobe:', path
+        out = queryFFProbe(path)
+    
+    info = processJson(out)
+    
+    if useCache:
+        _saveMovieInfo(path, out)
     
     return info
     
