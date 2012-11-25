@@ -1,3 +1,4 @@
+import os
 
 from sqlalchemy import Column, Integer, Unicode, ForeignKey, Boolean
 from sqlalchemy.orm import relationship
@@ -22,6 +23,10 @@ class Movie(DeclarativeBase):
     
     library = relationship("Library")
     imdbData = relationship("ImdbData")
+    
+    
+    def getFullPath(self):
+        return os.path.join(self.library.root, self.path)
     
     
 class ImdbData(DeclarativeBase):

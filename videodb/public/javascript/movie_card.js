@@ -16,10 +16,10 @@ var MovieCard = (function() {
 		mask = new Mask();
 	}
 	
-	pub.attach = function(imdbId) {
-		var li = $('imdb-'+imdbId);
-		li.getElement('img').addEvent('click', function() {
-			console.log('click !!');
+	pub.attach = function(movieId) {
+		var li = $('movie-'+movieId);
+		li.getElement('img').addEvent('click', function(e) {
+			e.stop();
 			
 			mask.show();
 			
@@ -33,7 +33,8 @@ var MovieCard = (function() {
 			});
 			
 			new Request.HTML({
-				url: '/movieCard/'+imdbId,
+				//url: '/movieCard/'+movieId,
+				url: li.getElement('a').href,
 				update: container,
 				
 				onSuccess: function() {

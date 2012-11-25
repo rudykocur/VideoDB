@@ -1,15 +1,19 @@
 <div>
 
 <div class="cover">
-	<img src="${data['cover'] or '/images/preview_unavailable.png'}"/>
+	<img src="${imdb['cover'] or '/images/preview_unavailable.png'}"/>
 </div>
 
 <div class="infoPanel">
 	<ul>
-		<li><strong>IMDB</strong>: <a href="${data['imdb url']}" target="_blank">link</a> 
-		<li><strong>Tytuł</strong>: ${data['title']}</li>
-		<li><strong>Gatunki</strong>: ${', '.join(data['genres'])}</li>
-		<li><strong>Fabuła</strong>: ${data['plot outline']}</li>
+		<li><strong>IMDB</strong>: <a href="${imdb['imdb url']}" target="_blank">link</a> 
+		<li><strong>Tytuł</strong>: ${imdb['title']}</li>
+		<li><strong>Gatunki</strong>: ${', '.join(imdb['genres'])}</li>
+		<li><strong>Fabuła</strong>: ${imdb['plot outline']}</li>
+		<li><strong>Czas</strong>: ${ffmpeg['duration']}</li>
+		<li><strong>Rozdzielczość</strong>: ${ffmpeg['frameSizeString']}</li>
+		<li><strong>Języki</strong>: ${', '.join(ffmpeg['audioLang'])}</li>
+		<li><strong>Napisy</strong>: ${', '.join(ffmpeg['subLang']) or 'Brak'}</li>
 	</ul>
 </div>
 

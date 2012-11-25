@@ -98,7 +98,7 @@ IdentificationSession.prototype.cancelSession = function(e, callback) {
 
 IdentificationSession.prototype.cancelIdentification = function() {
 	if(this.currentIdentifyRequest) {
-		this.currentIdentifyRequest.cancel();
+		//this.currentIdentifyRequest.cancel();
 		this.currentIdentifyRequest = null;
 	}
 }

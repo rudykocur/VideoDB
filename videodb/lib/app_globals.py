@@ -15,6 +15,10 @@ from videodb.model import entities
 
 from videodb.lib import imdb_utils
 
+
+queueBreak = object()
+
+
 class Globals(object):
     """Container for objects available throughout the life of the application.
 
@@ -38,19 +42,27 @@ class Globals(object):
         queueId = int(queueId)
         print 'Waiting in queue', queueId
         data = self.imdbQueues[queueId].get()
-        print 'Got value', data
+        #print 'Got value', data
         
         if data is None:
             print 'QUEUE', queueId,'DONE - removing'
             del self.imdbQueues[queueId]
+        
+        if data is queueBreak:
+            print 'QUEUE', queueId,'BREAK - removing'
+            del self.imdbQueues[queueId]
+            return
         
         return data
     
     def cancelIdentifyQueue(self, queueId):
         queueId = int(queueId)
         
+        q = self.imdbQueues[queueId]
+        
         print 'CANCELING QUEUE', queueId,'!!!!'
-        del self.imdbQueues[queueId]
+        q.put(queueBreak)
+        #del self.imdbQueues[queueId]
     
     def _findByFilenameWorker(self, gen, queueNum):
         q = self.imdbQueues[queueNum]

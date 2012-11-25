@@ -36,6 +36,7 @@ strong {
 
 #knownmovies .imgwrap {
 	height: 155px;
+	position: relative;
 }
 #knownmovies img {
 	max-width: 150px;
@@ -46,6 +47,17 @@ strong {
 
 #knownmovies img:hover {
 	border: solid 2px red;
+}
+
+#knownmovies .imgwrap .frameSize {
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	background: white;
+	border: solid 1px black;
+	padding: 3px;
+	font-size: 10px;
+	opacity: 0.7;
 }
 
 #knownmovies li {
@@ -166,6 +178,10 @@ strong {
 
 #movieCard li {
 	padding-bottom: 5px;
+}
+
+#movieCard img {
+	cursor: pointer;
 }
 
 

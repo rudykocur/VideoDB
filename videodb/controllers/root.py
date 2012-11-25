@@ -5,6 +5,8 @@ from tg import expose, flash, require, url, lurl, request, redirect, tmpl_contex
 from tg.i18n import ugettext as _, lazy_ugettext as l_
 from tgext.admin import AdminController
 
+import os
+
 from sqlalchemy.orm import joinedload
 
 from videodb.model import DBSession, metadata
@@ -15,7 +17,7 @@ from videodb import model
 from videodb.lib.base import BaseController
 from videodb.controllers.error import ErrorController
 
-from videodb.lib import imdb_utils
+from videodb.lib import imdb_utils, ffmpeg
 
 __all__ = ['RootController']
 
@@ -46,17 +48,28 @@ class RootController(BaseController):
         """Handle the front-page."""
         
         knownCond = entities.Movie.disabled==False, entities.Movie.imdbData!=None
-        knownMovies = DBSession.query(entities.Movie)\
+        knownMoviesDb = DBSession.query(entities.Movie)\
             .join(entities.ImdbData)\
             .filter(*knownCond)\
             .order_by(entities.ImdbData.name)\
             .options(joinedload(entities.Movie.imdbData))\
             .all()
         
+        knownMovies = []
+        for m in knownMoviesDb:
+            knownMovies.append([m, ffmpeg.getCachedMovieInfo(m.getFullPath())])
+        
         cond = entities.Movie.disabled==False, entities.Movie.imdbData==None
         allmovies = DBSession.query(entities.Movie).filter(*cond).all()
         
         return dict(page='index', movies=allmovies, known=knownMovies)
+    
+    @expose('videodb.templates.identifyList')
+    def identifyList(self):
+        cond = entities.Movie.disabled==False, entities.Movie.imdbData==None
+        allmovies = DBSession.query(entities.Movie).filter(*cond).all()
+        
+        return dict(movies=allmovies)
     
     @expose('json')
     def identify(self, movieId, customName=None):
@@ -87,7 +100,7 @@ class RootController(BaseController):
         
         movie.imdbData = imdbData
         
-        redirect('/')
+        redirect('/identifyList')
     
     @expose('json')
     def cancelIdentifyQueue(self, queueId):
@@ -114,10 +127,14 @@ class RootController(BaseController):
         m.disabled = True
         
         #return dict(removed=True, movieId=movieId)
-        redirect('/')
+        redirect('/identifyList')
     
     @expose('videodb.templates.movieCard')
-    def movieCard(self, imdbId):
-        data = imdb_utils.getMovieFullData(imdbId)
-        return dict(data=data)
+    def movieCard(self, movieId):
+        movie = DBSession.query(entities.Movie).get(movieId)
+        
+        ffmpegData = ffmpeg.getMovieInfo(os.path.join(movie.library.root, movie.path))
+        data = imdb_utils.getMovieFullData(movie.imdbData.imdbId)
+        
+        return dict(imdb=data, ffmpeg=ffmpegData)
     

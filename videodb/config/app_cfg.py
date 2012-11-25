@@ -15,7 +15,9 @@ convert them into boolean, for example, you should use the
 
 from tg.configuration import AppConfig
 
+import threading
 import videodb
+import tgscheduler
 from videodb import model
 from videodb.lib import app_globals, helpers 
 
@@ -39,3 +41,4 @@ base_config.renderers.append('mako')
 base_config.use_sqlalchemy = True
 base_config.model = videodb.model
 base_config.DBSession = videodb.model.DBSession
+
