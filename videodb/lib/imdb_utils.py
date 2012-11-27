@@ -100,40 +100,24 @@ def getMovieFullData(imdbId):
     return out
 
 def findByFilename(name):
-    print 'IMDB - searching for:', name
-#    t1 = time.time()
-#    i = imdb.IMDb()
-#    t2 = time.time()
-#    results = i.search_movie(name)
+    print 'TMDB - searching for:', name
     
     tmdbRs = tmdb.Movies(name)
-    
-    pprint(tmdbRs.movies)
-    
-#    print 'Found', len(results), 'results', '::', (t2-t1)
-    
-    #yield len(results)
     yield tmdbRs.get_total_results()
     
     
     
     for movie in tmdbRs:
-        
         data = {
             'id': movie.get_id(),
-            #'title': movie['title'],
-            #'title': getMovieTitle(movie),
             'title': movie.get_title(),
-            #'genres': movie.get('genres', []),
             'genres': map(lambda x: x['name'], movie.get_genres()),
-            #'cover': movie.get('full-size cover url', None),
-            #'cover': movie.get('cover url', None),
             'cover': movie.get_poster('m'),
             'year': movie.get_release_year(),
-            #'runtime': movie.get('runtime', None)
+            'runtime': movie.get_runtime(),
         }
         
-        print 'yielding', data
+        #print 'yielding', data
         
         yield data
     

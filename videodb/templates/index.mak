@@ -36,40 +36,6 @@ window.addEvent('domready', function() {
 	</li>
 </ul>
 
-<!--
-<a href="${tg.url('/refresh')}">Odśwież</a> || <a href="${tg.url('/identifyList')}">Niezidentyfikowane</a>
--->
-
 
 <div id="mainContent"></div>
 
-<!--
-<ul id="knownmovies">
-% for movie, ffmpeg in known:
-	<li id="movie-${movie.id}">
-		<span class="title">${movie.imdbData.name} (${movie.imdbData.year})</span>
-		<div class="imgwrap">
-			<a href="/movieCard/${movie.id}">
-				<img src="${movie.imdbData.coverUrl or '/images/preview_unavailable.png'}"/>
-			</a>
-		% if ffmpeg:
-			<span class="frameSize ${'720p' if ffmpeg['frameSize'][1] >= 720 else '' }">${ffmpeg['frameSizeString']}</span>
-		% endif
-		</div>
-		<span class="genres">${movie.imdbData.genres}</span>
-	</li>
-% endfor
-</ul>
-
-
-<script>
-window.addEvent('domready', function() {
-
-	MovieCard.initalize();
-% for movie, ffmpeg in known:
-	MovieCard.attach('${movie.id}');
-% endfor
-});
-</script>
-
--->
