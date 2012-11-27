@@ -10,6 +10,9 @@
 
 <script>
 window.addEvent('domready', function() {
+	MovieCard.initalize();
+	
+
 	ViewController.addView(GridView);
 	ViewController.addView(ListView);
 	

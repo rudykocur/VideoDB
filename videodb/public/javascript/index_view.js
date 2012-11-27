@@ -99,6 +99,14 @@ var ViewController = (function() {
 		currentView.show(data);
 	}
 	
+	/*
+	 * MOVIE SELECTION HANDLING
+	 */
+	
+	pub.itemSelected = function(item) {
+		MovieCard.openCard('/movieCard/'+item.id);
+	}
+	
 	return pub;
 })();
 
@@ -214,14 +222,19 @@ GridView.prototype = {
 			li.grab(new Element('span', {'class': 'title', text: item.title+' ('+item.year+')'}));
 			
 			var imgwrap = new Element('div', {'class': 'imgwrap'});
-			imgwrap.grab(new Element('img', {src: item.coverUrl}));
+			var img = new Element('img', {src: item.coverUrl});
+			imgwrap.grab(img);
 			li.grab(imgwrap);
 			
 			li.grab(new Element('span', {'class': 'genres', text: item.genres}));
 			
-			
 			ul.grab(li);
-		});
+			
+			img.addEvent('click', function() {
+				this.ctrl.itemSelected(item);
+			}.bind(this));
+			
+		}.bind(this));
 	},
 	
 	destroy: function() {}
@@ -249,10 +262,15 @@ ListView.prototype = {
 		items.each(function(item) {
 			var li = new Element('li');
 			
-			li.grab(this.addImgEvents(new Element('img', {src: item.coverUrl})));
+			var img = new Element('img', {src: item.coverUrl});
+			li.grab(this.addImgEvents(img));
 			li.grab(new Element('span', {'class': 'title', text: '('+item.year+') '+item.title}));
 			
 			ul.grab(li);
+			
+			img.addEvent('click', function() {
+				this.ctrl.itemSelected(item);
+			}.bind(this));
 			
 		}.bind(this));
 		

@@ -5,6 +5,7 @@
 __all__ = ['Globals']
 
 import os
+import tg
 import tgscheduler
 import transaction
 
@@ -13,7 +14,7 @@ from Queue import Queue
 from videodb.model import DBSession
 from videodb.model import entities
 
-from videodb.lib import imdb_utils
+from videodb.lib import imdb_utils, tmdb
 
 
 queueBreak = object()
@@ -36,7 +37,9 @@ class Globals(object):
         
         self.imdbQueueCounter = 1
         self.imdbQueues = {}
-        pass
+        
+        api_key = tg.config.get('tmdb_api_key')
+        tmdb.configure(api_key)
     
     def poolIdentifyQueue(self, queueId):
         queueId = int(queueId)
