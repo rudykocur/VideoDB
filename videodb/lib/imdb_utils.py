@@ -102,7 +102,7 @@ def getMovieFullData(imdbId):
 def findByFilename(name):
     print 'TMDB - searching for:', name
     
-    tmdbRs = tmdb.Movies(name)
+    tmdbRs = tmdb.Movies(name, True)
     yield tmdbRs.get_total_results()
     
     
