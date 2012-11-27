@@ -18,16 +18,13 @@ window.addEvent('domready', function() {
 	
 	ViewController.initalize($('mainContent'), jsonMovies);
 	
-	//ViewController.activateView('grid');
-	ViewController.activateView('list');
+	ViewController.activateView('grid');
+	//ViewController.activateView('list');
 });
 </script>
 </%def>
 
 <ul id="nav">
-	<li>
-		<a href="${tg.url('/refresh')}">Odśwież</a>
-	</li>
 	<li>
 		<strong class="current">Biblioteka</strong>
 	</li>

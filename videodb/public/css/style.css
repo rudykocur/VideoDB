@@ -38,7 +38,7 @@ strong {
 
 #viewSwitcher {
 	position: absolute;
-	top: 14px;
+	top: 20px;
 	right: 15px;
 }
 
@@ -53,8 +53,13 @@ strong {
 	
 	cursor: pointer;
 }
+
 #viewSwitcher ul li:hover {
 	background: gray;
+}
+
+#viewSwitcher ul li.active {
+	background: yellow;
 }
 
 
@@ -64,6 +69,7 @@ strong {
 #nav {
 	margin-top: 15px;
 	margin-bottom: 15px;
+	padding-left: 50px;
 	
 	
 	border-bottom: solid 1px black;
@@ -91,6 +97,17 @@ strong {
 
 
 
+#letterFilterControll ul {
+	display: inline;
+}
+
+#letterFilterControll li {
+	display: inline;
+	padding: 2px 6px;
+	
+}
+
+
 
 
 
@@ -103,13 +120,14 @@ strong {
 
 #gridView img,
 #knownmovies img {
-	/*
 	max-width: 150px;
 	max-height: 150px;
-	*/
+	/*
+	
 	width: 150px;
 	height: 150px;
 	display: inline-block;
+	*/
 	
 	cursor: pointer;
 	border: solid 2px black;
@@ -165,8 +183,8 @@ strong {
 }
 
 #listView img {
-	width: 50px;
-	height: 50px;
+	max-width: 50px;
+	max-height: 50px;
 	display: inline-block;
 	
 	vertical-align: middle;
@@ -180,10 +198,22 @@ strong {
 
 #movielist {
 	word-wrap: break-word;
+	margin-left: 15px;
+	
+	
 }
 
 #movielist li {
-	margin-bottom: 5px;
+	margin-bottom: 3px;
+	padding: 2px 0px;
+}
+
+#movielist li:hover {
+	background: #AAA;
+}
+
+#movielist li .numbering {
+	white-space: pre;
 }
 
 

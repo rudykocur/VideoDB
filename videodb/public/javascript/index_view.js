@@ -13,13 +13,25 @@ var ViewController = (function() {
 	var viewContent = null;
 	var viewSwitcherContent = null;
 	
+	var filterControlls = [];
+	
+	
+	
 	
 	pub.initalize = function(container, data) {
 		target = container;
 		viewData = data;
 		viewContent = new Element('div');
 		viewSwitcherContent = new Element('div', {id: 'viewSwitcher'});
-		target.adopt([viewSwitcherContent, viewContent]);
+		
+		filterControlls.push(new LetterFilterControll(this, viewData));
+		
+		//target.adopt([viewSwitcherContent, letterFilterContent, viewContent]);
+		target.grab(viewSwitcherContent);
+		target.adopt(filterControlls.map(function(x){return x.getContent()}));
+		target.grab(viewContent);
+		
+		
 		
 		updateViewSwitcher();
 	}
@@ -46,8 +58,11 @@ var ViewController = (function() {
 		viewContent.empty();
 		
 		var viewCls = viewsByName[viewName];
-		currentView = new viewCls(this, viewContent);
 		
+		viewSwitcherContent.getElements('.active').removeClass('active');
+		viewSwitcherContent.getElements('li')[views.indexOf(viewCls)].addClass('active');
+		
+		currentView = new viewCls(this, viewContent);
 		currentView.show(viewData);
 	}
 	
@@ -59,7 +74,10 @@ var ViewController = (function() {
 		
 		views.each(function(v) {
 			var li = new Element('li', {text: v.prototype.title});
-			li.addEvent('click', function() {pub.activateView(v.prototype.name)});
+			li.addEvent('click', function() {
+				
+				pub.activateView(v.prototype.name)
+			});
 			
 			ul.grab(li);
 		});
@@ -68,11 +86,111 @@ var ViewController = (function() {
 	}
 	
 	/*
-	 * 
+	 * HANDLING FILTERING
 	 */
+	
+	pub.updateFilters = function() {
+		var data = viewData;
+		
+		filterControlls.each(function(fc) {
+			data = fc.filterData(data);
+		});
+		
+		currentView.show(data);
+	}
 	
 	return pub;
 })();
+
+
+
+var LetterFilterControll = function(mainCtrl, data) {
+	this.mainCtrl = mainCtrl;
+	
+	var letters = [], uniqueLetters = [], i;
+	
+	var aCC = "A".charCodeAt(0);
+	var zCC = "Z".charCodeAt(0);
+	
+	var hasOther = false;
+	
+	for(i = 0; i < data.length; i++) {
+		var l = data[i].title[0].toUpperCase();
+		var cc = l.charCodeAt(0);
+		
+		if(cc < aCC || cc > zCC) {
+			hasOther = true;
+			continue;
+		}
+		
+		if(uniqueLetters.indexOf(l)<0) {
+			uniqueLetters.push(l);
+		}
+	}
+	
+	letters.push([LetterFilterControll.prototype.MODE_SHOW_ALL, 'Wszystkie']);
+	letters.append(uniqueLetters.sort().map(function(x) {return [x,x];}));
+	if(hasOther) {
+		letters.push([LetterFilterControll.prototype.MODE_LETTERS_OTHER, 'Inne']);
+	}
+	
+	this.target = new Element('div', {id: 'letterFilterControll'});
+	
+	this.target.appendText('Wybierz literę: ');
+	
+	var ul = this.target.grab(new Element('ul'));
+	
+	for(i = 0; i < letters.length; i++) {
+		var li = ul.grab(new Element('li'));
+		
+		var link = new Element('a', {href:'#', text: letters[i][1]});
+		this.wireLetterEvent(link, letters[i]);
+		
+		li.grab(link);
+	}
+	
+}
+
+LetterFilterControll.prototype = {
+	MODE_SHOW_ALL: 1,
+	MODE_LETTERS_OTHER: 2,
+	
+	getContent: function() {return this.target},
+	
+	filterData: function(data) {
+		if(this.selectedLetter == LetterFilterControll.prototype.MODE_SHOW_ALL) {
+			return data;
+		}
+		
+		var filterFunction;
+		var aCC = "A".charCodeAt(0);
+		var zCC = "Z".charCodeAt(0);
+		
+		if(this.selectedLetter == LetterFilterControll.prototype.MODE_LETTERS_OTHER) {
+			filterFunction = function(item) {
+				var l = item.title[0].toUpperCase().charCodeAt(0);
+				return (l < aCC || l > zCC);
+			}
+		}
+		else {
+			filterFunction = function(item) {
+				return item.title[0].toUpperCase() == this.selectedLetter;
+			}.bind(this);
+		}
+		
+		return data.filter(filterFunction);
+	},
+	
+	wireLetterEvent: function(link, letter) {
+		link.addEvent('click', function(e) {
+			e.stop();
+			
+			this.selectedLetter = letter[0];
+			
+			this.mainCtrl.updateFilters();
+		}.bind(this));
+	}
+}
 
 
 var GridView = function(controller, container) {
