@@ -6,6 +6,7 @@ from tg.i18n import ugettext as _, lazy_ugettext as l_
 from tgext.admin import AdminController
 
 import os
+import json
 
 from sqlalchemy.orm import joinedload
 
@@ -62,7 +63,18 @@ class RootController(BaseController):
         cond = entities.Movie.disabled==False, entities.Movie.imdbData==None
         allmovies = DBSession.query(entities.Movie).filter(*cond).all()
         
-        return dict(page='index', movies=allmovies, known=knownMovies)
+        jsonMovies = [];
+        for movie, ff in knownMovies:
+            jsonMovies.append({
+                'id': movie.id,
+                'title': movie.imdbData.name,
+                'year': movie.imdbData.year,
+                'coverUrl': movie.imdbData.coverUrl,
+                'frameSize': ff['frameSize'] if ff else None,
+                'genres': movie.imdbData.genres,
+            })
+        
+        return dict(page='index', movies=allmovies, known=knownMovies, jsonMovies=json.dumps(jsonMovies))
     
     @expose('videodb.templates.identifyList')
     def identifyList(self):

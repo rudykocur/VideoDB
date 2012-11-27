@@ -6,12 +6,44 @@
 
 <%def name="resources()">
 <script src="${tg.url('/javascript/movie_card.js')}"></script>
+<script src="${tg.url('/javascript/index_view.js')}"></script>
+
+<script>
+window.addEvent('domready', function() {
+	ViewController.addView(GridView);
+	ViewController.addView(ListView);
+	
+	var jsonMovies = '${jsonMovies}'.replace(/&#34;/g, "'");
+	var jsonMovies = JSON.decode(jsonMovies);
+	
+	ViewController.initalize($('mainContent'), jsonMovies);
+	
+	//ViewController.activateView('grid');
+	ViewController.activateView('list');
+});
+</script>
 </%def>
 
+<ul id="nav">
+	<li>
+		<a href="${tg.url('/refresh')}">Odśwież</a>
+	</li>
+	<li>
+		<strong class="current">Biblioteka</strong>
+	</li>
+	<li>
+		<a href="${tg.url('/identifyList')}">Niezidentyfikowane</a>	
+	</li>
+</ul>
+
+<!--
 <a href="${tg.url('/refresh')}">Odśwież</a> || <a href="${tg.url('/identifyList')}">Niezidentyfikowane</a>
+-->
 
 
+<div id="mainContent"></div>
 
+<!--
 <ul id="knownmovies">
 % for movie, ffmpeg in known:
 	<li id="movie-${movie.id}">
@@ -39,3 +71,5 @@ window.addEvent('domready', function() {
 % endfor
 });
 </script>
+
+-->

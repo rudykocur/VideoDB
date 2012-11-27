@@ -34,21 +34,93 @@ strong {
 
 
 
+
+
+#viewSwitcher {
+	position: absolute;
+	top: 14px;
+	right: 15px;
+}
+
+#viewSwitcher ul {
+	text-align: right;
+}
+#viewSwitcher ul li {
+	display: inline;
+	margin-left: 15px;
+	border: solid 1px black;
+	padding: 2px 6px;
+	
+	cursor: pointer;
+}
+#viewSwitcher ul li:hover {
+	background: gray;
+}
+
+
+
+
+
+#nav {
+	margin-top: 15px;
+	margin-bottom: 15px;
+	
+	
+	border-bottom: solid 1px black;
+}
+
+#nav li {
+	display: inline-block;
+	
+	
+	
+	border: solid 1px black;
+	border-bottom: none;
+	
+}
+
+#nav li strong,
+#nav li a {
+	display: inline-block;
+	padding: 4px 6px;
+}
+
+#nav li a:hover {
+	background: gray;
+}
+
+
+
+
+
+
+
+#gridView .imgwrap,
 #knownmovies .imgwrap {
 	height: 155px;
 	position: relative;
 }
+
+#gridView img,
 #knownmovies img {
+	/*
 	max-width: 150px;
 	max-height: 150px;
+	*/
+	width: 150px;
+	height: 150px;
+	display: inline-block;
+	
 	cursor: pointer;
-	border: solid 2px transparent;
+	border: solid 2px black;
 }
 
+#gridView img:hover,
 #knownmovies img:hover {
 	border: solid 2px red;
 }
 
+#gridView .imgwrap .frameSize,
 #knownmovies .imgwrap .frameSize {
 	position: absolute;
 	top: 0px;
@@ -60,6 +132,7 @@ strong {
 	opacity: 0.7;
 }
 
+#gridView li,
 #knownmovies li {
 	display:inline-block;
 	vertical-align: top;
@@ -68,6 +141,7 @@ strong {
 	padding-top: 15px;
 }
 
+#gridView li .title,
 #knownmovies li .title {
 	display: block;
 	font-weight: bold;
@@ -75,10 +149,32 @@ strong {
 	margin-bottom: 2px;
 }
 
+#gridView li .genres,
 #knownmovies li .genres {
 	display: block;
 	font-style: italic;
 }
+
+
+#listView {
+	margin-left: 10px;
+}
+
+#listView li {
+	margin-bottom: 5px;
+}
+
+#listView img {
+	width: 50px;
+	height: 50px;
+	display: inline-block;
+	
+	vertical-align: middle;
+	margin-right: 5px;
+	border: solid 2px black;
+}
+
+
 
 
 
