@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+{% block title %}Niezidentyfikowane{% endblock %}
+{% block head %}
+
+<script src="{{ url_for('static', filename='movie_identifier.js') }}"></script>
+
+<script>
+window.addEvent('domready', function() {
+	MovieIdentifier.attach($$('#movielist a.identify'));
+	
+	$('refreshIdentifyList').addEvent('click', function(e) {
+		e.stop();
+		
+		new Request({
+			url: e.target.href,
+			onSuccess: function() {
+				window.location = window.location;
+			},
+			onFailure: function(xhr) {
+				alert('Ooops, unable to refresh');
+				console.log('xhr');
+			}
+		}).get();
+	});
+});
+</script>
+
+{% endblock %}
+
+{% block content %}
+  
+<ul id="nav">
+	<li>
+		<a href="{{ url_for('main') }}">Biblioteka</a>	
+	</li>
+	<li>
+		<strong class="current">Niezidentyfikowane</strong>	
+	</li>
+	<li>
+		<a id="refreshIdentifyList" href="{{ url_for('refresh_unidentified') }}">Odśwież</a>	
+	</li>
+</ul>
+
+
+<ul id="movielist">
+{% for movie in movies %}
+	<li>
+		<a class="identify" href="{{ url_for('identify_movie', movieId=movie.id) }}">Identyfikuj</a> ::
+		<a class="ignore" href="{{ url_for('ignore_movie', movieId=movie.id) }}">Ignoruj</a> ::
+		{{ '/'.join(movie.path.split('/')[:-1]) }}{{ '/' if movie.path.find('/')>0 else '' }}<strong>{{ movie.path.split('/')[-1] }}</strong>
+	</li> 
+{% endfor %}
+</ul>
+
+{% endblock %}

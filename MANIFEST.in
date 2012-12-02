@@ -1,4 +1,0 @@
-recursive-include videodb/public *
-include videodb/public/favicon.ico
-recursive-include videodb/i18n *
-recursive-include videodb/templates *

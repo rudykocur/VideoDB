@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+{% block title %}Biblioteka{% endblock %}
+{% block head %}
+
+<script src="{{ url_for('static', filename='movie_card.js') }}"></script>
+<script src="{{ url_for('static', filename='index_view.js') }}"></script>
+
+<script>
+window.addEvent('domready', function() {
+	MovieCard.initalize();
+	
+
+	ViewController.addView(GridView);
+	ViewController.addView(ListView);
+	
+	var jsonMovies = '{{ jsonMovies }}'.replace(/&#34;/g, "'");
+	var jsonMovies = JSON.decode(jsonMovies);
+	
+	ViewController.initalize($('mainContent'), jsonMovies);
+	
+	ViewController.activateView('grid');
+	//ViewController.activateView('list');
+});
+</script>
+
+{% endblock %}
+
+{% block content %}
+  
+<ul id="nav">
+	<li>
+		<strong class="current">Biblioteka</strong>
+	</li>
+	<li>
+		<a href="{{ url_for('unidentified') }}">Niezidentyfikowane</a>	
+	</li>
+</ul>
+
+
+<div id="mainContent"></div>
+
+{% endblock %}
